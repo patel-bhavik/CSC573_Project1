@@ -5,7 +5,8 @@ public enum FormatCharacter{
 	LF("\n"),
 	SP(" "),
 	TAB("\t"),
-	COL(":");
+	COL(":"),
+	US("_");
 	
 	private final String charValue;
 

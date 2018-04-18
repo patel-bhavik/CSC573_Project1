@@ -33,6 +33,9 @@ public class CIServer implements Runnable {
 			String clientIpAddress = (String)serverInputStream.readObject();
 			hostToIpMap.put(clientHostName, clientIpAddress);
 			
+			// Connection Established Message
+			System.out.println("Connection establised with " + clientHostName + " client.");
+			
 			// Start serving Client
 			String method = null;
 			do {
@@ -45,7 +48,9 @@ public class CIServer implements Runnable {
 					System.out.println("Invalid Request");
 			}while(!method.equals(Method.EXIT.name()));
 			
-			System.out.println("Ending communication with "+clientHostName);
+			// Connection Termination Message
+			System.out.println("Connection with " + clientHostName + " client terminated.");
+						
 		}catch(Exception exp) {
 			System.out.println("Error occured while communication.");
 			exp.printStackTrace();
