@@ -16,5 +16,16 @@ public enum FormatCharacter{
     public String getValue() {
         return this.charValue;
     }
+    
+    public static boolean contains(String key) {
+    	
+    	for (FormatCharacter fc : FormatCharacter.values()) {
+            if (fc.getValue().equals(key)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 	
 }

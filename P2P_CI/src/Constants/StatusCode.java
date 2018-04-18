@@ -21,4 +21,26 @@ public enum StatusCode {
 	public String getPhrase() {
         return this.phrase;
     }
+	
+	public static boolean containsCode(String key) {
+    	
+    	for (StatusCode s : StatusCode.values()) {
+            if (s.getCode().equals(key)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+	
+	public static boolean containsPhrase(String key) {
+    	
+    	for (StatusCode s : StatusCode.values()) {
+            if (s.getPhrase().equals(key)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

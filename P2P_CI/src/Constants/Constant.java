@@ -14,4 +14,15 @@ public enum Constant{
     public String getValue() {
         return this.constValue;
     }
+    
+    public static boolean contains(String key) {
+    	
+    	for (Constant c : Constant.values()) {
+            if (c.getValue().equals(key)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

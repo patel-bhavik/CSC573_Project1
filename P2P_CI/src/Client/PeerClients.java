@@ -146,6 +146,7 @@ public class PeerClients {
 			clientOutputStream.writeObject("Client_"+peerServerPort);
 			clientOutputStream.writeObject(IP_ADDRESS);
 			
+			// Start Server Communication
 			int choice;
 			boolean notExit = true;
 			String rfcNumber;
@@ -167,7 +168,8 @@ public class PeerClients {
 							System.out.print("Enter RFC title: ");
 							rfcTitle = sc.nextLine();
 							String addRequest = generateAddRequest(rfcNumber,rfcTitle);
-						    System.out.print(addRequest);
+						    clientOutputStream.writeObject(addRequest);
+							System.out.print(addRequest);
 							break;
 					
 					case 2: System.out.print("Enter RFC number: ");
@@ -176,11 +178,13 @@ public class PeerClients {
 							System.out.print("Enter RFC title: ");
 							rfcTitle = sc.nextLine();
 							String lookupRequest = generateLookUpRequest(rfcNumber,rfcTitle);
+							clientOutputStream.writeObject(lookupRequest);
 							System.out.print(lookupRequest);
 							break;
 					
 					case 3: String listRequest = generateListRequest();
-					 		System.out.print(listRequest);
+							clientOutputStream.writeObject(listRequest);
+							System.out.print(listRequest);
 							break;
 					
 					case 4: System.out.print("Enter RFC number: ");
@@ -194,6 +198,7 @@ public class PeerClients {
 							if(confirmation.length() == 1 && confirmation.equalsIgnoreCase("Y")) {
 								notExit = false;
 								String exitRequest = generateExitRequest();
+								clientOutputStream.writeObject(exitRequest);
 								System.out.println(exitRequest);
 								cleanUp(clientInputStream,clientOutputStream,sc,peerClient,peerServer,rfcClient);
 							}
