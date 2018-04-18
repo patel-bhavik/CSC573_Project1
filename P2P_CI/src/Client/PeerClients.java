@@ -128,7 +128,6 @@ public class PeerClients {
 			HOST_NAME = InetAddress.getLocalHost().getHostName() + FormatCharacter.US.getValue() + peerServerPort;
 			IP_ADDRESS = InetAddress.getLocalHost().getHostAddress();
 			UPLOAD_PORT = Integer.toString(peerServerPort);
-			System.out.println();
 			
 			// Get Server Details
 			System.out.print("Enter IP Address of server to connect: ");
@@ -191,7 +190,6 @@ public class PeerClients {
 					case 4: System.out.print("Enter RFC number: ");
 							rfcNumber = sc.next();
 							String getRequest = generateDownloadRequest(rfcNumber);
-							clientOutputStream.writeObject(getRequest);
 							System.out.print(getRequest);
 							break;
 					
