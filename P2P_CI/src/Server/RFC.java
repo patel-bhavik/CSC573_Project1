@@ -4,12 +4,10 @@ public class RFC {
 
 	private int rfcNumber;
 	private String rfcTitle;
-	private String hostName;
 	
 	RFC(int rfcNumber, String rfcTitle, String hostName){
 		this.rfcNumber = rfcNumber;
 		this.rfcTitle = rfcTitle;
-		this.hostName = hostName;
 	}
 
 	public int getRfcNumber() {
@@ -27,16 +25,28 @@ public class RFC {
 	public void setRfcTitle(String rfcTitle) {
 		this.rfcTitle = rfcTitle;
 	}
-
-	public String getHostName() {
-		return hostName;
-	}
-
-	public void setHostName(String hostName) {
-		this.hostName = hostName;
-	}
 	
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + rfcNumber;
+		return result;
+	}
+
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		RFC other = (RFC) obj;
+		if (rfcNumber != other.rfcNumber)
+			return false;
+		return true;
+	}
+
 	public String toString() {
-		return "[Hostname: "+this.getHostName()+", RFC Number: "+this.rfcNumber+", RFC Title: "+this.rfcTitle+"]";
+		return "[RFC Number: "+this.rfcNumber+", RFC Title: "+this.rfcTitle+"]";
 	}
 }
