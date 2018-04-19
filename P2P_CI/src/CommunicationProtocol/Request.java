@@ -1,4 +1,4 @@
-package Client;
+package CommunicationProtocol;
 
 import Constants.Constant;
 import Constants.FormatCharacter;
@@ -10,7 +10,7 @@ public class Request {
 	private String uploadPort;
 	private String os;
 	
-	Request(String hostName, String uploadPort, String os){
+	public Request(String hostName, String uploadPort, String os){
 		this.hostName = hostName;
 		this.uploadPort = uploadPort;
 		this.os = os;

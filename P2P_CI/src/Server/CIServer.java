@@ -2,8 +2,12 @@ package Server;
 
 import java.io.ObjectInputStream;
 import java.net.Socket;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
+
+import CommunicationProtocol.Response;
+import Constants.FormatCharacter;
 import Constants.Method;
 
 public class CIServer implements Runnable {
@@ -38,12 +42,27 @@ public class CIServer implements Runnable {
 			String method = null;
 			do {
 				String request = (String)serverInputStream.readObject();
-				method = request.substring(0, request.indexOf("\t"));
-				System.out.println(method);
-				if(!method.equals(Method.GET.name()) && Method.contains(method))
-					System.out.println("Valid Request");
-				else
-					System.out.println("Invalid Request");
+				Response createResposne = new Response();
+				method = request.substring(0, request.indexOf(FormatCharacter.TAB.getValue()));
+				HashMap<String,String> resParams=null;
+				switch (method) {
+					case "ADD" : resParams = createResposne.parseAddRequest(request);
+								 System.out.println(resParams);
+								 break;
+					case "LOOKUP" : resParams = createResposne.parseLookupRequest(request);
+					 				System.out.println(resParams);
+					 				break;
+					case "LIST" : resParams = createResposne.parseListRequest(request);
+	 							  System.out.println(resParams);
+	 							  break;
+					case "EXIT" : resParams = createResposne.parseExitRequest(request);
+					  			  System.out.println(resParams);
+					  			  break;
+					default : resParams = new HashMap<String,String>();
+							  createResposne.addBadRequestStatusCode(resParams);
+							  System.out.println(resParams);
+				}
+				
 			}while(!method.equals(Method.EXIT.name()));
 			
 			// Connection Termination Message

@@ -3,7 +3,10 @@ package Constants;
 public enum Constant{
 	RFC("RFC"),
 	VERSION("P2P-CI/1.0"),
-	ALL("ALL");
+	ALL("ALL"),
+	STATUS_CODE("STATUS_CODE"),
+	STATUS_PHRASE("PHRASE"),
+	RFC_NUM("RFC_NUM");
 	
 	private final String constValue;
 

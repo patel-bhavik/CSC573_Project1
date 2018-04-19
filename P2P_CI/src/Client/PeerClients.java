@@ -8,6 +8,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Random;
 import java.util.Scanner;
+
+import CommunicationProtocol.Request;
 import Constants.FormatCharacter;
 
 public class PeerClients {
@@ -95,7 +97,7 @@ public class PeerClients {
 							System.out.print("Enter RFC title: ");
 							rfcTitle = sc.nextLine();
 							String addRequest = createRequest.getAddRequest(rfcNumber,rfcTitle);
-						    clientOutputStream.writeObject(addRequest);
+							clientOutputStream.writeObject(addRequest);
 							System.out.print(addRequest);
 							break;
 					
@@ -117,6 +119,7 @@ public class PeerClients {
 					case 4: System.out.print("Enter RFC number: ");
 							rfcNumber = sc.next();
 							String getRequest = createRequest.getDownloadRequest(rfcNumber);
+							clientOutputStream.writeObject(getRequest);
 							System.out.print(getRequest);
 							break;
 					
