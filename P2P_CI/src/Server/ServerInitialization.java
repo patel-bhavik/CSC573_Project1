@@ -3,9 +3,7 @@ package Server;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Collections;
 import java.util.Hashtable;
-import java.util.LinkedList;
 import java.util.List;
 
 public class ServerInitialization {

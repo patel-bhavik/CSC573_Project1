@@ -8,84 +8,9 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Random;
 import java.util.Scanner;
-import Constants.*;
+import Constants.FormatCharacter;
 
 public class PeerClients {
-	
-	private static String HOST_NAME;
-	private static String IP_ADDRESS;
-	private static String UPLOAD_PORT;
-	private static String OS = System.getProperty("os.name") ;
-	
-	public static String getHeader(String headerName, String headerValue) {
-		return headerName +
-			   FormatCharacter.COL.getValue() +
-			   FormatCharacter.TAB.getValue() +
-			   headerValue +
-			   FormatCharacter.CR.getValue() +
-			   FormatCharacter.LF.getValue();
-	}
-	
-	public static String generateAddRequest(String rfcNumber, String title) {
-		
-		String tab = FormatCharacter.TAB.getValue();
-		String cr = FormatCharacter.CR.getValue();
-		String lf = FormatCharacter.LF.getValue();
-		
-		return Method.ADD + tab + Constant.RFC.getValue() + tab + rfcNumber + tab + Constant.VERSION.getValue() + cr + lf +
-			   getHeader(Header.HOST.getValue(),HOST_NAME) +
-			   getHeader(Header.PORT.getValue(),UPLOAD_PORT) +
-			   getHeader(Header.TITLE.getValue(),title) +
-			   cr + lf;
-	}
-	
-	public static String generateLookUpRequest(String rfcNumber, String title) {
-		
-		String tab = FormatCharacter.TAB.getValue();
-		String cr = FormatCharacter.CR.getValue();
-		String lf = FormatCharacter.LF.getValue();
-		
-		return Method.LOOKUP + tab + Constant.RFC.getValue() + tab + rfcNumber + tab + Constant.VERSION.getValue() + cr + lf +
-			   getHeader(Header.HOST.getValue(),HOST_NAME) +
-			   getHeader(Header.PORT.getValue(),UPLOAD_PORT) +
-			   getHeader(Header.TITLE.getValue(),title) +
-			   cr + lf;
-	}
-	
-	public static String generateListRequest() {
-		
-		String tab = FormatCharacter.TAB.getValue();
-		String cr = FormatCharacter.CR.getValue();
-		String lf = FormatCharacter.LF.getValue();
-		
-		return Method.LIST + tab + Constant.ALL.getValue() + tab + Constant.VERSION.getValue() + cr + lf +
-			   getHeader(Header.HOST.getValue(),HOST_NAME) +
-			   getHeader(Header.PORT.getValue(),UPLOAD_PORT) +
-			   cr + lf;
-	}
-	
-	public static String generateDownloadRequest(String rfcNumber) {
-		
-		String tab = FormatCharacter.TAB.getValue();
-		String cr = FormatCharacter.CR.getValue();
-		String lf = FormatCharacter.LF.getValue();
-		
-		return Method.GET + tab + Constant.RFC.getValue() + tab + rfcNumber + tab + Constant.VERSION.getValue() + cr + lf +
-			   getHeader(Header.HOST.getValue(),HOST_NAME) +
-			   getHeader(Header.OS.getValue(),OS) +
-			   cr + lf;
-	}
-	
-	public static String generateExitRequest() {
-		
-		String tab = FormatCharacter.TAB.getValue();
-		String cr = FormatCharacter.CR.getValue();
-		String lf = FormatCharacter.LF.getValue();
-		
-		return Method.EXIT + tab + Constant.VERSION.getValue() + cr + lf +
-			   getHeader(Header.HOST.getValue(),HOST_NAME) +
-			   cr + lf;
-	}
 	
 	public static void cleanUp(ObjectInputStream inStream, ObjectOutputStream outStream, Scanner sc, Socket peerClient, ServerSocket peerServer, Socket rfcClient) {
 		try {
@@ -108,7 +33,8 @@ public class PeerClients {
 	}
 	
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+		
+		// Initialize Socket and IO Streams
 		Socket peerClient = null;
 		Socket rfcClient = null;
 		ServerSocket peerServer = null;
@@ -118,16 +44,16 @@ public class PeerClients {
 		
 		try {
 			
+			// Start Upload Process
 			Random randNumber = new Random();
 			int peerServerPort = randNumber.nextInt(15000)+50000;
-			
-			// Start Upload Process
 			peerServer = new ServerSocket(peerServerPort);
 			
 			// Set Host Details
-			HOST_NAME = InetAddress.getLocalHost().getHostName() + FormatCharacter.US.getValue() + peerServerPort;
-			IP_ADDRESS = InetAddress.getLocalHost().getHostAddress();
-			UPLOAD_PORT = Integer.toString(peerServerPort);
+			String hostName = InetAddress.getLocalHost().getHostName() + FormatCharacter.US.getValue() + peerServerPort;
+			String ipAddress = InetAddress.getLocalHost().getHostAddress();
+			String uploadPort = Integer.toString(peerServerPort);
+			String os = System.getProperty("os.name");
 			
 			// Get Server Details
 			System.out.print("Enter IP Address of server to connect: ");
@@ -139,16 +65,17 @@ public class PeerClients {
 			peerClient = new Socket(serverAddress,serverPort);
 			System.out.println("Connection established with server running at "+serverAddress+":"+serverPort+" successfully.");
 			
-			// Set Input Output Streams
+			// Create Output Streams
 			clientOutputStream = new ObjectOutputStream (peerClient.getOutputStream());
 			
-			// Send host details
-			clientOutputStream.writeObject(HOST_NAME);
-			clientOutputStream.writeObject(IP_ADDRESS);
+			// Send self details
+			clientOutputStream.writeObject(hostName);
+			clientOutputStream.writeObject(ipAddress);
 			
 			// Start Server Communication
 			int choice;
 			boolean notExit = true;
+			Request createRequest = new Request(hostName, uploadPort, os);
 			String rfcNumber;
 			String rfcTitle;
 			do {
@@ -167,7 +94,7 @@ public class PeerClients {
 							sc.nextLine();
 							System.out.print("Enter RFC title: ");
 							rfcTitle = sc.nextLine();
-							String addRequest = generateAddRequest(rfcNumber,rfcTitle);
+							String addRequest = createRequest.getAddRequest(rfcNumber,rfcTitle);
 						    clientOutputStream.writeObject(addRequest);
 							System.out.print(addRequest);
 							break;
@@ -177,19 +104,19 @@ public class PeerClients {
 							sc.nextLine();
 							System.out.print("Enter RFC title: ");
 							rfcTitle = sc.nextLine();
-							String lookupRequest = generateLookUpRequest(rfcNumber,rfcTitle);
+							String lookupRequest = createRequest.getLookUpRequest(rfcNumber,rfcTitle);
 							clientOutputStream.writeObject(lookupRequest);
 							System.out.print(lookupRequest);
 							break;
 					
-					case 3: String listRequest = generateListRequest();
+					case 3: String listRequest = createRequest.getListRequest();
 							clientOutputStream.writeObject(listRequest);
 							System.out.print(listRequest);
 							break;
 					
 					case 4: System.out.print("Enter RFC number: ");
 							rfcNumber = sc.next();
-							String getRequest = generateDownloadRequest(rfcNumber);
+							String getRequest = createRequest.getDownloadRequest(rfcNumber);
 							System.out.print(getRequest);
 							break;
 					
@@ -197,7 +124,7 @@ public class PeerClients {
 							String confirmation = sc.next();
 							if(confirmation.length() == 1 && confirmation.equalsIgnoreCase("Y")) {
 								notExit = false;
-								String exitRequest = generateExitRequest();
+								String exitRequest = createRequest.getExitRequest();
 								clientOutputStream.writeObject(exitRequest);
 								System.out.println(exitRequest);
 								cleanUp(clientInputStream,clientOutputStream,sc,peerClient,peerServer,rfcClient);
@@ -215,22 +142,7 @@ public class PeerClients {
 			System.out.println("Error occured while starting a peer client.");
 			exp.printStackTrace();
 		}finally {
-			try {
-				if(clientInputStream != null)
-					clientInputStream.close();
-				if(clientInputStream != null)
-					clientInputStream.close();
-				if(sc != null)
-					sc.close();
-				if(peerServer != null)
-					peerServer.close();
-				if(rfcClient != null)
-					rfcClient.close();
-				if(peerClient != null)
-					peerClient.close();
-			}catch(IOException exp) {
-				System.out.println("Error Occured while closing connections");
-			}
+			cleanUp(clientInputStream,clientOutputStream,sc,peerClient,peerServer,rfcClient);
 		}
 	}
 

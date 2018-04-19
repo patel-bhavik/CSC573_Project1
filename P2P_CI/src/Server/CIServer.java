@@ -1,11 +1,9 @@
 package Server;
 
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.Hashtable;
 import java.util.List;
-
 import Constants.Method;
 
 public class CIServer implements Runnable {
