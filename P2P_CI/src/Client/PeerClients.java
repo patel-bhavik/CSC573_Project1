@@ -208,6 +208,9 @@ public class PeerClients {
 							 break;
 				}
 			}while(notExit);
+			
+			System.out.println("Connection with server running at "+serverAddress+":"+serverPort+" terminated successfully.");
+			
 		}catch(Exception exp) {
 			System.out.println("Error occured while starting a peer client.");
 			exp.printStackTrace();
