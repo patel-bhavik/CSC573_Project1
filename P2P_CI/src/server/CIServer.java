@@ -1,4 +1,4 @@
-package Server;
+package server;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -9,13 +9,13 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import CommunicationProtocol.Response;
-import Constants.Constant;
-import Constants.FormatCharacter;
-import Constants.Header;
-import Constants.Method;
-import Constants.StatusCode;
-import Utility.DisplayOnConsole;
+import communication.protocol.Response;
+import constants.Constant;
+import constants.FormatCharacter;
+import constants.Header;
+import constants.Method;
+import constants.StatusCode;
+import utility.DisplayOnConsole;
 
 public class CIServer implements Runnable {
 

@@ -1,7 +1,7 @@
-package Utility;
+package utility;
 
-import Constants.Constant;
-import Constants.FormatCharacter;
+import constants.Constant;
+import constants.FormatCharacter;
 
 public class DisplayOnConsole {
 	

@@ -1,9 +1,9 @@
-package CommunicationProtocol;
+package communication.protocol;
 
-import Constants.Constant;
-import Constants.FormatCharacter;
-import Constants.Header;
-import Constants.Method;
+import constants.Constant;
+import constants.FormatCharacter;
+import constants.Header;
+import constants.Method;
 
 public class Request {
 	private String hostName;

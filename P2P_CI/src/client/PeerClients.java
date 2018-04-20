@@ -1,4 +1,4 @@
-package Client;
+package client;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -9,12 +9,12 @@ import java.net.Socket;
 import java.util.Random;
 import java.util.Scanner;
 
-import CommunicationProtocol.Request;
-import Constants.Constant;
-import Constants.FormatCharacter;
-import Constants.Method;
-import Constants.StatusCode;
-import Utility.DisplayOnConsole;
+import communication.protocol.Request;
+import constants.Constant;
+import constants.FormatCharacter;
+import constants.Method;
+import constants.StatusCode;
+import utility.DisplayOnConsole;
 
 public class PeerClients {
 	

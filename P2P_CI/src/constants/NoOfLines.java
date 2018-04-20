@@ -1,4 +1,4 @@
-package Constants;
+package constants;
 
 public enum NoOfLines {
 	ADD(4),

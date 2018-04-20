@@ -1,17 +1,17 @@
-package CommunicationProtocol;
+package communication.protocol;
 
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.LinkedList;
 
-import Constants.Constant;
-import Constants.FormatCharacter;
-import Constants.Header;
-import Constants.Method;
-import Constants.NoOfLines;
-import Constants.StatusCode;
-import Server.Peer;
-import Server.RFC;
+import constants.Constant;
+import constants.FormatCharacter;
+import constants.Header;
+import constants.Method;
+import constants.NoOfLines;
+import constants.StatusCode;
+import server.Peer;
+import server.RFC;
 
 public class Response {
 	

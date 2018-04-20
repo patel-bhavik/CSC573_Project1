@@ -1,4 +1,4 @@
-package Constants;
+package constants;
 
 public enum StatusCode {
 	OK("200","OK"),

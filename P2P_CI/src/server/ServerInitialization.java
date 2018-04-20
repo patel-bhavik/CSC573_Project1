@@ -1,4 +1,4 @@
-package Server;
+package server;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -7,9 +7,9 @@ import java.net.Socket;
 import java.util.Hashtable;
 import java.util.LinkedList;
 
-import Constants.Constant;
-import Constants.FormatCharacter;
-import Utility.DisplayOnConsole;
+import constants.Constant;
+import constants.FormatCharacter;
+import utility.DisplayOnConsole;
 
 public class ServerInitialization {
 
