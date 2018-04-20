@@ -64,7 +64,7 @@ public class CIServer implements Runnable {
 			hostToIpMap.put(clientHostName, clientIpAddress);
 			
 			// Connection Established Message
-			print.displayConnectionMessage(Constant.ESTABLISH.getValue(), Constant.CLIENT.getValue(), clientHostName);
+			print.connectionMessage(Constant.ESTABLISH.getValue(), Constant.CLIENT.getValue(), clientHostName);
 			
 			// Start serving Client
 			String method = null;
@@ -76,7 +76,7 @@ public class CIServer implements Runnable {
 				String response = null;
 				
 				switch (method) {
-					case "ADD" : print.displayMessage(Constant.REQ.getValue(), request, Method.ADD.name(), Constant.RCVD.getValue(), Constant.CLIENT.getValue() + FormatCharacter.COL.getValue() + FormatCharacter.SP.getValue() + clientHostName);
+					case "ADD" : print.communicationMessage(Constant.REQ.getValue(), request, Method.ADD.name(), Constant.RCVD.getValue(), Constant.CLIENT.getValue() + FormatCharacter.COL.getValue() + FormatCharacter.SP.getValue() + clientHostName);
 								 resParams = createResposne.parseAddRequest(request);
 								 String statusCode = resParams.get(Constant.STATUS_CODE.getValue());
 								 String statusPhrase = resParams.get(Constant.STATUS_PHRASE.getValue());
@@ -93,7 +93,7 @@ public class CIServer implements Runnable {
 								 }else {
 									 response = createResposne.getAddResponse(statusCode, statusPhrase);
 								 }
-								 print.displayMessage(Constant.RES.getValue(), response, Method.ADD.name(), Constant.SENT.getValue(), Constant.CLIENT.getValue() + FormatCharacter.COL.getValue() + FormatCharacter.SP.getValue() + clientHostName);
+								 print.communicationMessage(Constant.RES.getValue(), response, Method.ADD.name(), Constant.SENT.getValue(), Constant.CLIENT.getValue() + FormatCharacter.COL.getValue() + FormatCharacter.SP.getValue() + clientHostName);
 								 break;
 					
 					case "LOOKUP" : System.out.println("Received LOOKUP request from Host: "+clientHostName);
@@ -126,11 +126,10 @@ public class CIServer implements Runnable {
 			}while(!method.equals(Method.EXIT.name()));
 			
 			// Connection Termination Message
-			print.displayConnectionMessage(Constant.TERMINATE.getValue(), Constant.CLIENT.getValue(), clientHostName);
+			print.connectionMessage(Constant.TERMINATE.getValue(), Constant.CLIENT.getValue(), clientHostName);
 						
 		}catch(Exception exp) {
-			System.out.println("Error occured while communication.");
-			exp.printStackTrace();
+			print.errorMessage(Constant.CI_SERVER.getValue(), Constant.COMMUNICATION.getValue(), exp.getMessage());
 		}
 	}
 }

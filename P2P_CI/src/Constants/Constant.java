@@ -19,7 +19,10 @@ public enum Constant{
 	REQ("Request"),
 	RES("Response"),
 	CI_SERVER("Centralized Index server"),
-	UPLOAD_SERVER("Upload server");
+	UPLOAD_SERVER("Upload server"),
+	COMMUNICATION("communication"),
+	INITIALIZATION("initialization"),
+	CLEANUP("clean up");
 	
 	private final String constValue;
 

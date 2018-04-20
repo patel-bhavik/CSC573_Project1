@@ -35,8 +35,7 @@ public class ServerInitialization {
 				t.start();
 			}
 		}catch(Exception exp) {
-			System.out.println("Error occured while starting the server.");
-			exp.printStackTrace();
+			print.errorMessage(Constant.CI_SERVER.getValue(), Constant.INITIALIZATION.getValue(), exp.getMessage());
 		}
 	}
 
