@@ -6,7 +6,20 @@ public enum Constant{
 	ALL("ALL"),
 	STATUS_CODE("STATUS_CODE"),
 	STATUS_PHRASE("PHRASE"),
-	RFC_NUM("RFC_NUM");
+	RFC_NUM("RFC_NUM"),
+	RCVD("received"),
+	SENT("sent"),
+	SERVER("server"),
+	CLIENT("client"),
+	FROM("from"),
+	TO("to"),
+	SRVR_TARGET_NAME("server running at"),
+	ESTABLISH("established"),
+	TERMINATE("terminated"),
+	REQ("Request"),
+	RES("Response"),
+	CI_SERVER("Centralized Index server"),
+	UPLOAD_SERVER("Upload server");
 	
 	private final String constValue;
 

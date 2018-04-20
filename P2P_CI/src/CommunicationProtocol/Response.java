@@ -6,9 +6,14 @@ import Constants.Constant;
 import Constants.FormatCharacter;
 import Constants.Header;
 import Constants.Method;
+import Constants.NoOfLines;
 import Constants.StatusCode;
 
 public class Response {
+	
+	private final String tab = FormatCharacter.TAB.getValue();
+	private final String cr = FormatCharacter.CR.getValue();
+	private final String lf = FormatCharacter.LF.getValue();
 	
 	public boolean isNumeric(String str) {  
 	  try {  
@@ -64,7 +69,8 @@ public class Response {
 				addBadRequestStatusCode(resParams);
 				return false;
 			}else {
-				headers.put(headerName, headerParams[1].trim());
+				if(headers != null)
+					headers.put(headerName, headerParams[1].trim());
 			}
 		}
 		return true;
@@ -75,7 +81,7 @@ public class Response {
 		HashMap<String,String> resParams = new HashMap<String,String>();
 		String lineSeparator = FormatCharacter.CR.getValue() + FormatCharacter.LF.getValue();
 		String reqLines[] = addRequest.split(lineSeparator);
-		final int expectedLines = 4;
+		final int expectedLines = NoOfLines.ADD.getLines();
 		HashMap<String,String> headers = new HashMap<String,String>();
 		String reqParams[] = reqLines[0].split(FormatCharacter.TAB.getValue());
 		
@@ -107,7 +113,7 @@ public class Response {
 		HashMap<String,String> resParams = new HashMap<String,String>();
 		String lineSeparator = FormatCharacter.CR.getValue() + FormatCharacter.LF.getValue();
 		String reqLines[] = lookupRequest.split(lineSeparator);
-		final int expectedLines = 4;
+		final int expectedLines = NoOfLines.LOOKUP.getLines();
 		HashMap<String,String> headers = new HashMap<String,String>();
 		String reqParams[] = reqLines[0].split(FormatCharacter.TAB.getValue());
 		
@@ -139,14 +145,13 @@ public class Response {
 		HashMap<String,String> resParams = new HashMap<String,String>();
 		String lineSeparator = FormatCharacter.CR.getValue() + FormatCharacter.LF.getValue();
 		String reqLines[] = listRequest.split(lineSeparator);
-		final int expectedLines = 3;
-		HashMap<String,String> headers = new HashMap<String,String>();
+		final int expectedLines = NoOfLines.LIST.getLines();
 		String reqParams[] = reqLines[0].split(FormatCharacter.TAB.getValue());
 		
 		// Validate Number of Lines, Headers and Version
 		if(!noOfLinesValidated(reqLines, expectedLines, resParams) ||
 		   !versionValidated(reqParams[2], resParams) ||
-		   !headersValidated(expectedLines, reqLines, headers, resParams)){
+		   !headersValidated(expectedLines, reqLines, null, resParams)){
 			return resParams;
 		}
 		
@@ -155,7 +160,6 @@ public class Response {
 		   reqParams[0].equals(Method.LIST.name()) &&
 		   reqParams[1].equals(Constant.ALL.getValue())){
 			addOkStatusCode(resParams);
-			addHeaders(headers, resParams);
 		}else {
 			addBadRequestStatusCode(resParams);
 			return resParams;
@@ -169,7 +173,7 @@ public class Response {
 		HashMap<String,String> resParams = new HashMap<String,String>();
 		String lineSeparator = FormatCharacter.CR.getValue() + FormatCharacter.LF.getValue();
 		String reqLines[] = downloadRequest.split(lineSeparator);
-		final int expectedLines = 3;
+		final int expectedLines = NoOfLines.GET.getLines();
 		HashMap<String,String> headers = new HashMap<String,String>();
 		String reqParams[] = reqLines[0].split(FormatCharacter.TAB.getValue());
 		
@@ -200,7 +204,7 @@ public class Response {
 		HashMap<String,String> resParams = new HashMap<String,String>();
 		String lineSeparator = FormatCharacter.CR.getValue() + FormatCharacter.LF.getValue();
 		String reqLines[] = exitRequest.split(lineSeparator);
-		final int expectedLines = 2;
+		final int expectedLines = NoOfLines.EXIT.getLines();
 		HashMap<String,String> headers = new HashMap<String,String>();
 		String reqParams[] = reqLines[0].split(FormatCharacter.TAB.getValue());
 		
@@ -222,5 +226,18 @@ public class Response {
 		}
 		
 		return resParams;
+	}
+	
+	public String getAddResponse(String statusCode, String statusPhrase) {
+		
+		return Constant.VERSION.getValue() + tab + statusCode + tab + statusPhrase + cr + lf +
+			   cr + lf;
+	}
+	
+	public String getAddResponse(String statusCode, String statusPhrase, String rfcNumber, String rfcTitle, String hostName, String port) {
+		
+		return getAddResponse(statusCode, statusPhrase) +
+			   Constant.RFC.getValue() + tab + rfcNumber + tab + rfcTitle + tab + hostName + tab + port + cr + lf +
+			   cr + lf;
 	}
 }

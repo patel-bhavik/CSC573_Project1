@@ -10,7 +10,10 @@ import java.util.Random;
 import java.util.Scanner;
 
 import CommunicationProtocol.Request;
+import Constants.Constant;
 import Constants.FormatCharacter;
+import Constants.Method;
+import Utility.DisplayOnConsole;
 
 public class PeerClients {
 	
@@ -43,6 +46,7 @@ public class PeerClients {
 		Scanner sc = new Scanner(System.in);
 		ObjectInputStream clientInputStream = null;
 		ObjectOutputStream clientOutputStream = null;
+		DisplayOnConsole print = new DisplayOnConsole();
 		
 		try {
 			
@@ -65,10 +69,11 @@ public class PeerClients {
 			
 			// Connect with server
 			peerClient = new Socket(serverAddress,serverPort);
-			System.out.println("Connection established with server running at "+serverAddress+":"+serverPort+" successfully.");
+			print.displayConnectionMessage(Constant.ESTABLISH.getValue(), Constant.SERVER.getValue(), serverAddress+ FormatCharacter.COL.getValue() +serverPort);
 			
 			// Create Output Streams
 			clientOutputStream = new ObjectOutputStream (peerClient.getOutputStream());
+			clientInputStream = new ObjectInputStream (peerClient.getInputStream());
 			
 			// Send self details
 			clientOutputStream.writeObject(hostName);
@@ -98,7 +103,9 @@ public class PeerClients {
 							rfcTitle = sc.nextLine();
 							String addRequest = createRequest.getAddRequest(rfcNumber,rfcTitle);
 							clientOutputStream.writeObject(addRequest);
-							System.out.print(addRequest);
+							print.displayMessage(Constant.REQ.getValue(), addRequest, Method.ADD.name(), Constant.SENT.getValue(), Constant.SERVER.getValue());
+							String addResponse = (String)clientInputStream.readObject();
+							print.displayMessage(Constant.RES.getValue(), addResponse, Method.ADD.name(), Constant.RCVD.getValue(), Constant.SERVER.getValue());
 							break;
 					
 					case 2: System.out.print("Enter RFC number: ");
@@ -108,19 +115,19 @@ public class PeerClients {
 							rfcTitle = sc.nextLine();
 							String lookupRequest = createRequest.getLookUpRequest(rfcNumber,rfcTitle);
 							clientOutputStream.writeObject(lookupRequest);
-							System.out.print(lookupRequest);
+							print.displayMessage(Constant.REQ.getValue(), lookupRequest, Method.LOOKUP.name(), Constant.SENT.getValue(), Constant.SERVER.getValue());
 							break;
 					
 					case 3: String listRequest = createRequest.getListRequest();
 							clientOutputStream.writeObject(listRequest);
-							System.out.print(listRequest);
+							print.displayMessage(Constant.REQ.getValue(), listRequest, Method.LIST.name(), Constant.SENT.getValue(), Constant.SERVER.getValue());
 							break;
 					
 					case 4: System.out.print("Enter RFC number: ");
 							rfcNumber = sc.next();
 							String getRequest = createRequest.getDownloadRequest(rfcNumber);
 							clientOutputStream.writeObject(getRequest);
-							System.out.print(getRequest);
+							print.displayMessage(Constant.REQ.getValue(), getRequest, Method.GET.name(), Constant.SENT.getValue(), Constant.SERVER.getValue());
 							break;
 					
 					case 5: System.out.print("Are you sure you want to exit? (Y/N): ");
@@ -129,7 +136,7 @@ public class PeerClients {
 								notExit = false;
 								String exitRequest = createRequest.getExitRequest();
 								clientOutputStream.writeObject(exitRequest);
-								System.out.println(exitRequest);
+								print.displayMessage(Constant.REQ.getValue(), exitRequest, Method.EXIT.name(), Constant.SENT.getValue(), Constant.SERVER.getValue());
 								cleanUp(clientInputStream,clientOutputStream,sc,peerClient,peerServer,rfcClient);
 							}
 							break;
@@ -139,7 +146,7 @@ public class PeerClients {
 				}
 			}while(notExit);
 			
-			System.out.println("Connection with server running at "+serverAddress+":"+serverPort+" terminated successfully.");
+			print.displayConnectionMessage(Constant.TERMINATE.getValue(), Constant.SERVER.getValue(), serverAddress+ FormatCharacter.COL.getValue() +serverPort);
 			
 		}catch(Exception exp) {
 			System.out.println("Error occured while starting a peer client.");

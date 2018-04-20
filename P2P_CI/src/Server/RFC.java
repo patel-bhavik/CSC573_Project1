@@ -5,7 +5,7 @@ public class RFC {
 	private int rfcNumber;
 	private String rfcTitle;
 	
-	RFC(int rfcNumber, String rfcTitle, String hostName){
+	RFC(int rfcNumber, String rfcTitle){
 		this.rfcNumber = rfcNumber;
 		this.rfcTitle = rfcTitle;
 	}

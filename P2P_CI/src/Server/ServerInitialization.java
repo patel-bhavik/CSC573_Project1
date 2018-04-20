@@ -4,7 +4,11 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Hashtable;
-import java.util.List;
+import java.util.LinkedList;
+
+import Constants.Constant;
+import Constants.FormatCharacter;
+import Utility.DisplayOnConsole;
 
 public class ServerInitialization {
 
@@ -14,13 +18,14 @@ public class ServerInitialization {
 		ServerSocket centralIndexServer;
 		Socket clientSocket;
 		Hashtable<String,String> hostToIpMap = new Hashtable<String,String>();
-		Hashtable<RFC,List<Peer>> rfcData = new Hashtable<RFC,List<Peer>>();
+		Hashtable<RFC,LinkedList<Peer>> rfcData = new Hashtable<RFC,LinkedList<Peer>>();
+		DisplayOnConsole print = new DisplayOnConsole();
 		
 		try {
 			
 			// Starting Server
 			centralIndexServer = new ServerSocket(serverPort);
-			System.out.println("Centralized Index server started on "+InetAddress.getLocalHost().getHostAddress()+":"+serverPort+".");
+			print.serverInitializationMessage(Constant.CI_SERVER.getValue(), InetAddress.getLocalHost().getHostAddress() + FormatCharacter.COL.getValue() + serverPort);
 			
 			// Accepting Client Connections
 			while(true) {

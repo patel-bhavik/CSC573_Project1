@@ -5,7 +5,8 @@ public enum Method{
 	LOOKUP,
 	LIST,
 	GET,
-	EXIT;
+	EXIT,
+	INVALID;
 	
 	public static boolean contains(String key) {
     	
