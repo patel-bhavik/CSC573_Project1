@@ -1,5 +1,6 @@
 package Server;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -16,7 +17,7 @@ public class ServerInitialization {
 		
 		final int serverPort = 7734;
 		ServerSocket centralIndexServer;
-		Socket clientSocket;
+		Socket clientSocket = null;
 		Hashtable<String,String> hostToIpMap = new Hashtable<String,String>();
 		Hashtable<RFC,LinkedList<Peer>> rfcData = new Hashtable<RFC,LinkedList<Peer>>();
 		DisplayOnConsole print = new DisplayOnConsole();
@@ -36,6 +37,13 @@ public class ServerInitialization {
 			}
 		}catch(Exception exp) {
 			print.errorMessage(Constant.CI_SERVER.getValue(), Constant.INITIALIZATION.getValue(), exp.getMessage());
+		}finally {
+			try {
+				if(clientSocket != null)
+					clientSocket.close();
+			}catch(IOException exp) {
+				print.errorMessage(Constant.CI_SERVER.getValue(), Constant.CLEANUP.getValue(), exp.getMessage());
+			}
 		}
 	}
 

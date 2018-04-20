@@ -62,6 +62,7 @@ public class Request {
 		
 		return Method.EXIT + tab + Constant.VERSION.getValue() + cr + lf +
 			   getHeader(Header.HOST.getValue(),this.hostName) +
+			   getHeader(Header.PORT.getValue(),this.uploadPort) +
 			   cr + lf;
 	}
 }

@@ -15,11 +15,11 @@ public class DisplayOnConsole {
 			prepostition = Constant.FROM.getValue();
 		else
 			prepostition = Constant.TO.getValue();
-		System.out.println("-----------------------------------------------------------------------");
+		System.out.println("----------------------------------------------------------------------------------");
 		System.out.println(messageType + space + "for" + space + method + space + reqState + space + prepostition + space + source + fullStop);
-		System.out.println("-----------------------------------------------------------------------");
+		System.out.println("----------------------------------------------------------------------------------");
 		System.out.print(message);
-		System.out.println("-----------------------------------------------------------------------");
+		System.out.println("---------------------------------------------------------------------------------");
 	}
 	
 	public void connectionMessage(String connectionType, String target, String targetAddress) {

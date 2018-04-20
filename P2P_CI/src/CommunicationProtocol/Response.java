@@ -1,6 +1,8 @@
 package CommunicationProtocol;
 
 import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.LinkedList;
 
 import Constants.Constant;
 import Constants.FormatCharacter;
@@ -8,6 +10,8 @@ import Constants.Header;
 import Constants.Method;
 import Constants.NoOfLines;
 import Constants.StatusCode;
+import Server.Peer;
+import Server.RFC;
 
 public class Response {
 	
@@ -228,7 +232,7 @@ public class Response {
 		return resParams;
 	}
 	
-	public String getAddResponse(String statusCode, String statusPhrase) {
+	public String getResponseHeader(String statusCode, String statusPhrase) {
 		
 		return Constant.VERSION.getValue() + tab + statusCode + tab + statusPhrase + cr + lf +
 			   cr + lf;
@@ -236,8 +240,31 @@ public class Response {
 	
 	public String getAddResponse(String statusCode, String statusPhrase, String rfcNumber, String rfcTitle, String hostName, String port) {
 		
-		return getAddResponse(statusCode, statusPhrase) +
+		return getResponseHeader(statusCode, statusPhrase) +
 			   Constant.RFC.getValue() + tab + rfcNumber + tab + rfcTitle + tab + hostName + tab + port + cr + lf +
 			   cr + lf;
+	}
+	
+	public String getLookupResponse(String statusCode, String statusPhrase, String rfcNumber, String rfcTitle, LinkedList<Peer> peerList) {
+		
+		StringBuilder response = new StringBuilder(getResponseHeader(statusCode, statusPhrase));
+		peerList.forEach((peer) -> {
+			response.append(Constant.RFC.getValue() + tab + rfcNumber + tab + rfcTitle + tab + peer.getHostName() + tab + peer.getIpAddress() + tab + peer.getPort() + cr + lf);
+		});
+		return response.append(cr + lf).toString();
+	}
+	
+	public String getListResponse(String statusCode, String statusPhrase, Hashtable<RFC,LinkedList<Peer>> rfcData) {
+		
+		StringBuilder response = new StringBuilder(getResponseHeader(statusCode, statusPhrase));
+		
+		rfcData.forEach((rfc,peerList) -> {
+			String rfcNumber = Integer.toString(rfc.getRfcNumber());
+			String rfcTitle = rfc.getRfcTitle();
+			peerList.forEach((peer) -> {
+				response.append(Constant.RFC.getValue() + tab + rfcNumber + tab + rfcTitle + tab + peer.getHostName() + tab + peer.getIpAddress() + tab + peer.getPort() + cr + lf);
+			});
+		});
+		return response.append(cr + lf).toString();
 	}
 }

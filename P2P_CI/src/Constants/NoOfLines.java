@@ -5,7 +5,7 @@ public enum NoOfLines {
 	LOOKUP(4),
 	LIST(3),
 	GET(3),
-	EXIT(2);
+	EXIT(3);
 	
 	private final int count;
 

@@ -13,6 +13,7 @@ import CommunicationProtocol.Request;
 import Constants.Constant;
 import Constants.FormatCharacter;
 import Constants.Method;
+import Constants.StatusCode;
 import Utility.DisplayOnConsole;
 
 public class PeerClients {
@@ -35,7 +36,6 @@ public class PeerClients {
 		}catch(IOException exp) {
 			print.errorMessage(Constant.CLIENT.getValue(), Constant.CLEANUP.getValue(), exp.getMessage());
 		}
-		
 	}
 	
 	public static void main(String[] args) {
@@ -117,11 +117,15 @@ public class PeerClients {
 							String lookupRequest = createRequest.getLookUpRequest(rfcNumber,rfcTitle);
 							clientOutputStream.writeObject(lookupRequest);
 							print.communicationMessage(Constant.REQ.getValue(), lookupRequest, Method.LOOKUP.name(), Constant.SENT.getValue(), Constant.SERVER.getValue());
+							String lookupResponse = (String)clientInputStream.readObject();
+							print.communicationMessage(Constant.RES.getValue(), lookupResponse, Method.LOOKUP.name(), Constant.RCVD.getValue(), Constant.SERVER.getValue());
 							break;
 					
 					case 3: String listRequest = createRequest.getListRequest();
 							clientOutputStream.writeObject(listRequest);
 							print.communicationMessage(Constant.REQ.getValue(), listRequest, Method.LIST.name(), Constant.SENT.getValue(), Constant.SERVER.getValue());
+							String listResponse = (String)clientInputStream.readObject();
+							print.communicationMessage(Constant.RES.getValue(), listResponse, Method.LIST.name(), Constant.RCVD.getValue(), Constant.SERVER.getValue());
 							break;
 					
 					case 4: System.out.print("Enter RFC number: ");
@@ -129,16 +133,22 @@ public class PeerClients {
 							String getRequest = createRequest.getDownloadRequest(rfcNumber);
 							clientOutputStream.writeObject(getRequest);
 							print.communicationMessage(Constant.REQ.getValue(), getRequest, Method.GET.name(), Constant.SENT.getValue(), Constant.SERVER.getValue());
+							String getResponse = (String)clientInputStream.readObject();
+							print.communicationMessage(Constant.RES.getValue(), getResponse, Method.GET.name(), Constant.RCVD.getValue(), Constant.SERVER.getValue());
 							break;
 					
 					case 5: System.out.print("Are you sure you want to exit? (Y/N): ");
 							String confirmation = sc.next();
 							if(confirmation.length() == 1 && confirmation.equalsIgnoreCase("Y")) {
-								notExit = false;
 								String exitRequest = createRequest.getExitRequest();
 								clientOutputStream.writeObject(exitRequest);
 								print.communicationMessage(Constant.REQ.getValue(), exitRequest, Method.EXIT.name(), Constant.SENT.getValue(), Constant.SERVER.getValue());
-								cleanUp(clientInputStream,clientOutputStream,sc,peerClient,peerServer,rfcClient);
+								String exitResponse = (String)clientInputStream.readObject();
+								print.communicationMessage(Constant.RES.getValue(), exitResponse, Method.EXIT.name(), Constant.RCVD.getValue(), Constant.SERVER.getValue());
+								if(exitResponse.contains(StatusCode.OK.getCode())) {
+									notExit = false;
+									cleanUp(clientInputStream,clientOutputStream,sc,peerClient,peerServer,rfcClient);
+								}
 							}
 							break;
 					
