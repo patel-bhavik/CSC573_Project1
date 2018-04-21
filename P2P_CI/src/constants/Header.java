@@ -4,7 +4,11 @@ public enum Header{
 	HOST("Host"),
 	TITLE("Title"),
 	PORT("Port"),
-	OS("OS");
+	OS("OS"),
+	DATE("Date"),
+	LM("Last-Modified"),
+	CL("Content-Length"),
+	CT("Content-Type");
 	
 	private final String header;
 

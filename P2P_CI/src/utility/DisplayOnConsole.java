@@ -15,9 +15,9 @@ public class DisplayOnConsole {
 			prepostition = Constant.FROM.getValue();
 		else
 			prepostition = Constant.TO.getValue();
-		System.out.println("----------------------------------------------------------------------------------");
+		System.out.println("---------------------------------------------------------------------------------");
 		System.out.println(messageType + space + "for" + space + method + space + reqState + space + prepostition + space + source + fullStop);
-		System.out.println("----------------------------------------------------------------------------------");
+		System.out.println("---------------------------------------------------------------------------------");
 		System.out.print(message);
 		System.out.println("---------------------------------------------------------------------------------");
 	}
@@ -36,7 +36,7 @@ public class DisplayOnConsole {
 	}
 	
 	public void errorMessage(String componentName, String state, String message) {
-		System.err.println("Error occured at" + space + componentName + space + "while" + space + state);
+		System.err.println("Error occured at" + space + componentName + space + "while" + space + state + fullStop);
 		System.err.println("Error Message" + colon + space + message);
 	}
 }

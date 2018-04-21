@@ -7,7 +7,8 @@ public enum FormatCharacter{
 	TAB("\t"),
 	COL(":"),
 	US("_"),
-	FS(".");
+	FS("."),
+	FSL("/");
 	
 	private final String charValue;
 

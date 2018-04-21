@@ -1,5 +1,12 @@
 package communication.protocol;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.LinkedList;
@@ -12,12 +19,16 @@ import constants.NoOfLines;
 import constants.StatusCode;
 import server.Peer;
 import server.RFC;
+import utility.DisplayOnConsole;
 
 public class Response {
 	
 	private final String tab = FormatCharacter.TAB.getValue();
+	private final String colon = FormatCharacter.COL.getValue();
 	private final String cr = FormatCharacter.CR.getValue();
 	private final String lf = FormatCharacter.LF.getValue();
+	private DateFormat dateFormat = new SimpleDateFormat("EEE, dd MMM YYYY HH:mm:ss zzz");
+	private String lineSeparator = FormatCharacter.CR.getValue() + FormatCharacter.LF.getValue();
 	
 	public boolean isNumeric(String str) {  
 	  try {  
@@ -83,7 +94,6 @@ public class Response {
 	public HashMap<String,String> parseAddRequest(String addRequest){
 		
 		HashMap<String,String> resParams = new HashMap<String,String>();
-		String lineSeparator = FormatCharacter.CR.getValue() + FormatCharacter.LF.getValue();
 		String reqLines[] = addRequest.split(lineSeparator);
 		final int expectedLines = NoOfLines.ADD.getLines();
 		HashMap<String,String> headers = new HashMap<String,String>();
@@ -115,7 +125,6 @@ public class Response {
 	public HashMap<String,String> parseLookupRequest(String lookupRequest){
 		
 		HashMap<String,String> resParams = new HashMap<String,String>();
-		String lineSeparator = FormatCharacter.CR.getValue() + FormatCharacter.LF.getValue();
 		String reqLines[] = lookupRequest.split(lineSeparator);
 		final int expectedLines = NoOfLines.LOOKUP.getLines();
 		HashMap<String,String> headers = new HashMap<String,String>();
@@ -147,7 +156,6 @@ public class Response {
 	public HashMap<String,String> parseListRequest(String listRequest){
 		
 		HashMap<String,String> resParams = new HashMap<String,String>();
-		String lineSeparator = FormatCharacter.CR.getValue() + FormatCharacter.LF.getValue();
 		String reqLines[] = listRequest.split(lineSeparator);
 		final int expectedLines = NoOfLines.LIST.getLines();
 		String reqParams[] = reqLines[0].split(FormatCharacter.TAB.getValue());
@@ -175,7 +183,6 @@ public class Response {
 	public HashMap<String,String> parseDownloadRequest(String downloadRequest){
 		
 		HashMap<String,String> resParams = new HashMap<String,String>();
-		String lineSeparator = FormatCharacter.CR.getValue() + FormatCharacter.LF.getValue();
 		String reqLines[] = downloadRequest.split(lineSeparator);
 		final int expectedLines = NoOfLines.GET.getLines();
 		HashMap<String,String> headers = new HashMap<String,String>();
@@ -194,6 +201,7 @@ public class Response {
 		   reqParams[1].equals(Constant.RFC.getValue()) &&
 		   isNumeric(reqParams[2])){
 			addOkStatusCode(resParams);
+			resParams.put(Constant.RFC_NUM.getValue(), reqParams[2]);
 			addHeaders(headers, resParams);
 		}else {
 			addBadRequestStatusCode(resParams);
@@ -206,7 +214,6 @@ public class Response {
 	public HashMap<String,String> parseExitRequest(String exitRequest){
 		
 		HashMap<String,String> resParams = new HashMap<String,String>();
-		String lineSeparator = FormatCharacter.CR.getValue() + FormatCharacter.LF.getValue();
 		String reqLines[] = exitRequest.split(lineSeparator);
 		final int expectedLines = NoOfLines.EXIT.getLines();
 		HashMap<String,String> headers = new HashMap<String,String>();
@@ -238,6 +245,13 @@ public class Response {
 			   cr + lf;
 	}
 	
+	public String getDownloadResponseHeader(String statusCode, String statusPhrase, String os) {
+		
+		return Constant.VERSION.getValue() + tab + statusCode + tab + statusPhrase + cr + lf +
+			   Header.DATE.getValue() + colon + tab + dateFormat.format(new Date()) + cr + lf +
+			   Header.OS.getValue() + colon + tab + os + cr + lf ;
+	}
+	
 	public String getAddResponse(String statusCode, String statusPhrase, String rfcNumber, String rfcTitle, String hostName, String port) {
 		
 		return getResponseHeader(statusCode, statusPhrase) +
@@ -266,5 +280,35 @@ public class Response {
 			});
 		});
 		return response.append(cr + lf).toString();
+	}
+	
+	public String getDownloadResponse(String statusCode, String statusPhrase, String rfcDirPath, String rfcNumber, String os, long lastModifiedDateTime, long contentLength, StringBuilder fileContents) {
+		
+		StringBuilder response = new StringBuilder(getDownloadResponseHeader(statusCode, statusPhrase, os));
+		response.append(Header.LM.getValue() + colon + tab + dateFormat.format(new Date(lastModifiedDateTime)) + cr + lf);
+		response.append(Header.CL.getValue() + colon + tab + Long.toString(contentLength) + cr + lf);
+		response.append(Header.CT.getValue() + colon + tab + Constant.CONTENT_TYPE.getValue() + cr + lf);
+		response.append(cr + lf);
+		response.append(fileContents);
+		return response.append(cr + lf).toString();
+	}
+	
+	public void processDownloadResponse(String getResponse, String filePath) {
+		DisplayOnConsole print = new DisplayOnConsole();
+		String reqLines[] = getResponse.split(lineSeparator);
+		int startIndex = NoOfLines.GET_RES.getLines();
+		StringBuilder fileContents = new StringBuilder();
+		int lines = reqLines.length;
+		for(int i = startIndex ; i < lines; i++) {
+			fileContents.append(reqLines[i]);
+			if(i < lines - 1)
+				fileContents.append(cr + lf);
+		}
+		
+		try {
+			Files.write(Paths.get(filePath), fileContents.toString().getBytes(StandardCharsets.UTF_8));
+		} catch (IOException exp) {
+			print.errorMessage(Constant.CLIENT.getValue(), Constant.SAVE_FILE.getValue(), exp.getMessage());
+		}
 	}
 }

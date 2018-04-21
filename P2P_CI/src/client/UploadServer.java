@@ -22,8 +22,8 @@ public class UploadServer implements Runnable {
 	public void run() {
 		
 		ServerSocket uploadServer = null;
-		DisplayOnConsole print = new DisplayOnConsole();
 		Socket uploadClientSocket = null;
+		DisplayOnConsole print = new DisplayOnConsole();
 		
 		try {
 			
@@ -34,7 +34,7 @@ public class UploadServer implements Runnable {
 			// Accepting Client Connections
 			while(true) {
 				uploadClientSocket = uploadServer.accept();
-				UploadServerClient newClient = new UploadServerClient(uploadClientSocket, rfcDirPath);
+				UploadServerClient newClient = new UploadServerClient(uploadClientSocket, rfcDirPath, uploadClientSocket.getLocalAddress().getHostName());
 				Thread t = new Thread(newClient);
 				t.start();
 			}
@@ -47,7 +47,7 @@ public class UploadServer implements Runnable {
 				if(uploadServer != null)
 					uploadServer.close();
 			}catch(IOException exp) {
-				print.errorMessage(Constant.CI_SERVER.getValue(), Constant.CLEANUP.getValue(), exp.getMessage());
+				print.errorMessage(Constant.UPLOAD_SERVER.getValue(), Constant.CLEANUP.getValue(), exp.getMessage());
 			}
 		}
 	}

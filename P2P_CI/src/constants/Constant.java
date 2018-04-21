@@ -21,8 +21,12 @@ public enum Constant{
 	CI_SERVER("Centralized Index server"),
 	UPLOAD_SERVER("Upload server"),
 	COMMUNICATION("communication"),
+	SAVE_FILE("saving file received from server"),
+	FNF("file transfer"),
 	INITIALIZATION("initialization"),
-	CLEANUP("clean up");
+	CLEANUP("clean up"),
+	FILE_EXT(".txt"),
+	CONTENT_TYPE("text/plain");
 	
 	private final String constValue;
 
