@@ -16,7 +16,7 @@ public class ServerInitialization {
 	public static void main(String[] args) {
 		
 		final int serverPort = 7734;
-		ServerSocket centralIndexServer;
+		ServerSocket centralIndexServer = null;
 		Socket clientSocket = null;
 		Hashtable<String,String> hostToIpMap = new Hashtable<String,String>();
 		Hashtable<RFC,LinkedList<Peer>> rfcData = new Hashtable<RFC,LinkedList<Peer>>();
@@ -41,6 +41,8 @@ public class ServerInitialization {
 			try {
 				if(clientSocket != null)
 					clientSocket.close();
+				if(centralIndexServer != null)
+					centralIndexServer.close();
 			}catch(IOException exp) {
 				print.errorMessage(Constant.CI_SERVER.getValue(), Constant.CLEANUP.getValue(), exp.getMessage());
 			}

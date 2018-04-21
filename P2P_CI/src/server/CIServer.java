@@ -19,9 +19,9 @@ import utility.DisplayOnConsole;
 
 public class CIServer implements Runnable {
 
-	Socket clientSocket;
-	Hashtable<RFC,LinkedList<Peer>> rfcData;
-	Hashtable<String,String> hostToIpMap;
+	private Socket clientSocket;
+	private Hashtable<RFC,LinkedList<Peer>> rfcData;
+	private Hashtable<String,String> hostToIpMap;
 	
 	CIServer(Socket clientSocket, Hashtable<RFC,LinkedList<Peer>> rfcData, Hashtable<String,String> hostToIpMap){
 		this.clientSocket = clientSocket;
@@ -86,7 +86,6 @@ public class CIServer implements Runnable {
 		return foundRFC;
 	}
 	
-	@Override
 	public void run() {
 		
 		// Set IO Stream
