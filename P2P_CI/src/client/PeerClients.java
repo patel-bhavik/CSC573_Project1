@@ -130,7 +130,7 @@ public class PeerClients {
 			
 			// Connect with server
 			peerClient = new Socket(serverAddress,serverPort);
-			print.connectionMessage(Constant.ESTABLISH.getValue(), Constant.SERVER.getValue(), serverAddress+ FormatCharacter.COL.getValue() +serverPort);
+			print.connectionMessage(Constant.ESTABLISH.getValue(), Constant.SERVER.getValue(), serverAddress+ FormatCharacter.COL.getValue() + serverPort);
 			
 			// Create IO Streams
 			clientOutputStream = new ObjectOutputStream (peerClient.getOutputStream());
