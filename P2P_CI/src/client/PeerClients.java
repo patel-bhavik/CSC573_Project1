@@ -53,10 +53,10 @@ public class PeerClients {
 		}
 	}
 	
-	public static void saveRFCFile(String getResponse, String rfcNumber, String rfcDirPath) {
+	public static boolean saveRFCFile(String getResponse, String rfcNumber, String rfcDirPath) {
 		Response response = new Response();
 		String filePath = rfcDirPath + FormatCharacter.FSL.getValue() + rfcNumber + Constant.FILE_EXT.getValue();
-		response.processDownloadResponse(getResponse, filePath);
+		return response.processDownloadResponse(getResponse, filePath);
 	}
 	
 	public static void sendGetCommunication(Socket rfcClient, String uploadServerAddress, int uploadServerPort, String getRequest, String rfcNumber, String rfcTitle, ObjectInputStream clientInputStream, ObjectOutputStream clientOutputStream, Request createRequest, String rfcDirPath) {
@@ -78,8 +78,7 @@ public class PeerClients {
 			String exitResponse = (String)rfcClientInputStream.readObject();
 			print.communicationMessage(Constant.RES.getValue(), exitResponse, Method.EXIT.name(), Constant.RCVD.getValue(), Constant.UPLOAD_SERVER.getValue());
 			cleanUpUploadServer(rfcClientInputStream, rfcClientOutputStream, rfcClient);
-			if(getResponse.contains(StatusCode.OK.getCode())) {
-				saveRFCFile(getResponse, rfcNumber, rfcDirPath);
+			if(getResponse.contains(StatusCode.OK.getCode()) && saveRFCFile(getResponse, rfcNumber, rfcDirPath)) {
 				String getAddRequest = createRequest.getAddRequest(rfcNumber,rfcTitle);
 				clientOutputStream.writeObject(getAddRequest);
 				print.communicationMessage(Constant.REQ.getValue(), getAddRequest, Method.ADD.name(), Constant.SENT.getValue(), Constant.CI_SERVER.getValue());
@@ -109,8 +108,7 @@ public class PeerClients {
 			// Get Server Details
 			System.out.print("Enter IP Address of server to connect: ");
 			String serverAddress = sc.next();
-			System.out.print("Enter Port of server to connect: ");
-			int serverPort = sc.nextInt();
+			final int serverPort = 7734;
 			sc.nextLine();
 			System.out.print("Enter RFC directory path: ");
 			String rfcDirPath = sc.nextLine();

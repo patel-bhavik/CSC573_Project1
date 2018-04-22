@@ -293,7 +293,7 @@ public class Response {
 		return response.append(cr + lf).toString();
 	}
 	
-	public void processDownloadResponse(String getResponse, String filePath) {
+	public boolean processDownloadResponse(String getResponse, String filePath) {
 		DisplayOnConsole print = new DisplayOnConsole();
 		String reqLines[] = getResponse.split(lineSeparator);
 		int startIndex = NoOfLines.GET_RES.getLines();
@@ -307,8 +307,10 @@ public class Response {
 		
 		try {
 			Files.write(Paths.get(filePath), fileContents.toString().getBytes(StandardCharsets.UTF_8));
+			return true;
 		} catch (IOException exp) {
 			print.errorMessage(Constant.CLIENT.getValue(), Constant.SAVE_FILE.getValue(), exp.getMessage());
+			return false;
 		}
 	}
 }

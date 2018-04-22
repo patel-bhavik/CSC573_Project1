@@ -1,10 +1,4 @@
-/Client/
-/Server/
-/Constants/
-/CommunicationProtocol/
-/Utility/
 /client/
 /communication/
 /constants/
-/server/
 /utility/

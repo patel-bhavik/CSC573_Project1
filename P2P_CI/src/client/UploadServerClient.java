@@ -57,6 +57,7 @@ public class UploadServerClient implements Runnable {
 			uploadServerInputStream = new ObjectInputStream (clientSocket.getInputStream());
 			
 			// Connection Established Message
+			System.out.println();
 			print.connectionMessage(Constant.ESTABLISH.getValue(), Constant.CLIENT.getValue(), clientHostName);
 			
 			// Start serving Client
