@@ -85,6 +85,7 @@ public class PeerClients {
 				String getAddResponse = (String)clientInputStream.readObject();
 				print.communicationMessage(Constant.RES.getValue(), getAddResponse, Method.ADD.name(), Constant.RCVD.getValue(), Constant.CI_SERVER.getValue());
 			}
+			print.connectionMessage(Constant.TERMINATE.getValue(), Constant.SERVER.getValue(), uploadServerAddress+ FormatCharacter.COL.getValue() +uploadServerPort);
 		}catch(Exception exp) {
 			print.errorMessage(Constant.UPLOAD_SERVER.getValue(), Constant.INITIALIZATION.getValue(), exp.getMessage());
 		}finally {
@@ -229,6 +230,8 @@ public class PeerClients {
 			print.errorMessage(Constant.CLIENT.getValue(), Constant.COMMUNICATION.getValue(), exp.getMessage());
 		}finally {
 			cleanUp(clientInputStream,clientOutputStream,sc,peerClient,peerServer,rfcClient);
+			System.out.println("Completed finally");
+			System.out.println("Should terminate now.");
 		}
 	}
 
