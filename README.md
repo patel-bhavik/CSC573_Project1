@@ -59,3 +59,31 @@ Following document describes the second project P2P-CI for CSC-573 Internet Prot
             ```
     
     7. Now follow the menu driven program and you will see the request response on both client and server console.
+
+2. Assumptions
+
+    1. Name of the RFC File must be same as the RFC Number. For e.g. the RFC file corresponding to RFC number 123 will be `123.txt`.
+
+    2. When the peer connects to the system, we assume that it provides correct RFC directory path. Path validation is not performed.
+
+    3. When the peer adds an RFC to the system, it is assumed that that peer has a corresponding RFC file in the RFC directory. The file name must be as stated above.
+
+    4. When the peer downloads the RFC File, it gets saved to the same RFC directory which user gave while connecting. So, if this path is wrong even after getting ok response and corresponding file content from respective server, file will not be saved in the client.
+
+    5. When RFC file is successfully downloaded, ADD request for the same is sent to CI Server and not input of confirmation is asked from user.
+
+    6. If any client has added wrong RFC info to CI server and if another client tries to download that RFC file, NOT FOUND response is given back. Or if client has that RFC file but it provided wrong RFC directory path while connecting with server then also NOT FOUND response is given back.
+
+3. Deviation from project report
+
+    1. Data Structure Used
+
+        I have used one hashtable instead of two linked list as mentioned in project document. Key of my hashtable is RFC, which contains RFC details like RFC Number and RFC Title. Value of the hashtable is list of peers that have the corresponding RFC file. Reason behind using this data structure is that, our frequent operation is add and lookup. Hashtable will be more efficient in such cases where we can lookup RFCs based on keys easily.
+
+    2. Using TAB instead os Space in request
+
+        In project document, for each request between different part space is used. However, I created rquest with TAB as separator. Title header may also contain spaces in between. To avoid confusion between the different request parts or different word of a rfc title we used TAB as a separator.
+
+    3. Added IP Address in response
+
+        In reponse to LOOKUP and LIST request, I have added IP address as well in response. This is to make sure that client has all required information to contact peer to download RFC.
