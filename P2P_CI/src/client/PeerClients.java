@@ -59,7 +59,7 @@ public class PeerClients {
 		return response.processDownloadResponse(getResponse, filePath);
 	}
 	
-	public static void sendGetCommunication(Socket rfcClient, String uploadServerAddress, int uploadServerPort, String getRequest, String rfcNumber, String rfcTitle, ObjectInputStream clientInputStream, ObjectOutputStream clientOutputStream, Request createRequest, String rfcDirPath) {
+	public static void sendGetCommunication(String hostName, Socket rfcClient, String uploadServerAddress, int uploadServerPort, String getRequest, String rfcNumber, String rfcTitle, ObjectInputStream clientInputStream, ObjectOutputStream clientOutputStream, Request createRequest, String rfcDirPath) {
 		DisplayOnConsole print = new DisplayOnConsole();
 		ObjectInputStream rfcClientInputStream = null;
 		ObjectOutputStream rfcClientOutputStream = null;
@@ -68,6 +68,7 @@ public class PeerClients {
 			print.connectionMessage(Constant.ESTABLISH.getValue(), Constant.SERVER.getValue(), uploadServerAddress+ FormatCharacter.COL.getValue() +uploadServerPort);
 			rfcClientOutputStream = new ObjectOutputStream (rfcClient.getOutputStream());
 			rfcClientInputStream = new ObjectInputStream (rfcClient.getInputStream());
+			clientOutputStream.writeObject(hostName);
 			rfcClientOutputStream.writeObject(getRequest);
 			print.communicationMessage(Constant.REQ.getValue(), getRequest, Method.GET.name(), Constant.SENT.getValue(), Constant.UPLOAD_SERVER.getValue());
 			String getResponse = (String)rfcClientInputStream.readObject();
@@ -119,6 +120,7 @@ public class PeerClients {
 			int peerServerPort = randNumber.nextInt(15000)+50000;
 			UploadServer newServer = new UploadServer(peerServerPort, rfcDirPath);
 			Thread t = new Thread(newServer);
+			t.setDaemon(true);
 			t.start();
 			
 			// Set Host Details
@@ -200,7 +202,7 @@ public class PeerClients {
 							if(uploadServerAddress.equals(ipAddress) && Integer.toString(uploadServerPort).equals(uploadPort)) {
 								System.out.println("You have given your own details. Please try again with valid server details");
 							}else {
-								sendGetCommunication(rfcClient, uploadServerAddress, uploadServerPort, getRequest, rfcNumber, rfcTitle, clientInputStream, clientOutputStream, createRequest, rfcDirPath);
+								sendGetCommunication(hostName, rfcClient, uploadServerAddress, uploadServerPort, getRequest, rfcNumber, rfcTitle, clientInputStream, clientOutputStream, createRequest, rfcDirPath);
 							}
 							break;
 					
@@ -230,8 +232,6 @@ public class PeerClients {
 			print.errorMessage(Constant.CLIENT.getValue(), Constant.COMMUNICATION.getValue(), exp.getMessage());
 		}finally {
 			cleanUp(clientInputStream,clientOutputStream,sc,peerClient,peerServer,rfcClient);
-			System.out.println("Completed finally");
-			System.out.println("Should terminate now.");
 		}
 	}
 

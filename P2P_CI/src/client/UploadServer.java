@@ -34,8 +34,9 @@ public class UploadServer implements Runnable {
 			// Accepting Client Connections
 			while(true) {
 				uploadClientSocket = uploadServer.accept();
-				UploadServerClient newClient = new UploadServerClient(uploadClientSocket, rfcDirPath, uploadClientSocket.getLocalAddress().getHostName());
+				UploadServerClient newClient = new UploadServerClient(uploadClientSocket, rfcDirPath);
 				Thread t = new Thread(newClient);
+				t.setDaemon(true);
 				t.start();
 			}
 		}catch(Exception exp) {

@@ -23,10 +23,9 @@ public class UploadServerClient implements Runnable {
 	private String clientHostName;
 	private String os = System.getProperty("os.name");
 	
-	public UploadServerClient(Socket clientSocket, String rfcDirPath, String clientHostName){
+	public UploadServerClient(Socket clientSocket, String rfcDirPath){
 		this.clientSocket = clientSocket;
 		this.rfcDirPath = rfcDirPath;
-		this.clientHostName = clientHostName;
 	}
 	
 	public void cleanUp(ObjectInputStream inStream, ObjectOutputStream outStream) {
@@ -58,6 +57,8 @@ public class UploadServerClient implements Runnable {
 			
 			// Connection Established Message
 			System.out.println();
+			clientHostName = (String)uploadServerInputStream.readObject();
+			
 			print.connectionMessage(Constant.ESTABLISH.getValue(), Constant.CLIENT.getValue(), clientHostName);
 			
 			// Start serving Client
