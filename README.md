@@ -78,11 +78,11 @@ Following document describes the second project P2P-CI for CSC-573 Internet Prot
 
     1. Data Structure Used
 
-        I have used one hashtable instead of two linked list as mentioned in project document. Key of my hashtable is RFC, which contains RFC details like RFC Number and RFC Title. Value of the hashtable is list of peers that have the corresponding RFC file. Reason behind using this data structure is that, our frequent operation is add and lookup. Hashtable will be more efficient in such cases where we can lookup RFCs based on keys easily.
+        We have used one hashtable instead of two linked list as mentioned in project document. Key of hashtable is RFC, which contains RFC details like RFC Number and RFC Title. Value of the hashtable is list of peers that have the corresponding RFC file. Each peer has info regarding Host Name, IP and Upload Port information of the client. Reason behind using this data structure is that, our frequent operation is add and lookup. Hashtable will be more efficient in such cases where we can lookup RFCs based on keys easily instead of traversing RFC list and then for that RFC traversing Peer list.
 
-    2. Using TAB instead os Space in request
+    2. Using TAB instead of Space in request
 
-        In project document, for each request between different part space is used. However, I created rquest with TAB as separator. Title header may also contain spaces in between. To avoid confusion between the different request parts or different word of a rfc title we used TAB as a separator.
+        In project document, for each request between different part space is used. However, I created rquest with TAB as separator. Title of a RFC may also contain spaces in between. To avoid confusion between the different request parts and different word of a rfc title we used TAB as a separator.
 
     3. Added IP Address in response
 
