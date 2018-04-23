@@ -68,7 +68,7 @@ public class PeerClients {
 			print.connectionMessage(Constant.ESTABLISH.getValue(), Constant.SERVER.getValue(), uploadServerAddress+ FormatCharacter.COL.getValue() +uploadServerPort);
 			rfcClientOutputStream = new ObjectOutputStream (rfcClient.getOutputStream());
 			rfcClientInputStream = new ObjectInputStream (rfcClient.getInputStream());
-			clientOutputStream.writeObject(hostName);
+			rfcClientOutputStream.writeObject(hostName);
 			rfcClientOutputStream.writeObject(getRequest);
 			print.communicationMessage(Constant.REQ.getValue(), getRequest, Method.GET.name(), Constant.SENT.getValue(), Constant.UPLOAD_SERVER.getValue());
 			String getResponse = (String)rfcClientInputStream.readObject();
@@ -115,23 +115,23 @@ public class PeerClients {
 			System.out.print("Enter RFC directory path: ");
 			String rfcDirPath = sc.nextLine();
 			
-			// Start Upload Server
-			Random randNumber = new Random();
-			int peerServerPort = randNumber.nextInt(15000)+50000;
-			UploadServer newServer = new UploadServer(peerServerPort, rfcDirPath);
-			Thread t = new Thread(newServer);
-			t.setDaemon(true);
-			t.start();
-			
-			// Set Host Details
-			String hostName = InetAddress.getLocalHost().getHostName() + FormatCharacter.US.getValue() + peerServerPort;
-			String ipAddress = InetAddress.getLocalHost().getHostAddress();
-			String uploadPort = Integer.toString(peerServerPort);
-			String os = System.getProperty("os.name");
-			
 			// Connect with server
 			peerClient = new Socket(serverAddress,serverPort);
 			print.connectionMessage(Constant.ESTABLISH.getValue(), Constant.SERVER.getValue(), serverAddress+ FormatCharacter.COL.getValue() + serverPort);
+			
+			// Set Host Details
+			Random randNumber = new Random();
+			int peerServerPort = randNumber.nextInt(15000)+50000;
+			String hostName = InetAddress.getLocalHost().getHostName() + FormatCharacter.US.getValue() + peerServerPort;
+			String ipAddress = peerClient.getLocalAddress().toString().substring(1);
+			String uploadPort = Integer.toString(peerServerPort);
+			String os = System.getProperty("os.name");
+						
+			// Start Upload Server
+			UploadServer newServer = new UploadServer(ipAddress, peerServerPort, rfcDirPath);
+			Thread t = new Thread(newServer);
+			t.setDaemon(true);
+			t.start();
 			
 			// Create IO Streams
 			clientOutputStream = new ObjectOutputStream (peerClient.getOutputStream());

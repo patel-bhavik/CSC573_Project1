@@ -1,7 +1,6 @@
 package client;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -11,10 +10,12 @@ import utility.DisplayOnConsole;
 
 public class UploadServer implements Runnable {
 	
+	private String ipAddress;
 	private int uploadPort;
 	private String rfcDirPath;
 	
-	public UploadServer(int uploadPort, String rfcDirPath) {
+	public UploadServer(String ipAddress, int uploadPort, String rfcDirPath) {
+		this.ipAddress = ipAddress;
 		this.uploadPort = uploadPort;
 		this.rfcDirPath = rfcDirPath;
 	}
@@ -29,7 +30,7 @@ public class UploadServer implements Runnable {
 			
 			// Starting Upload Server
 			uploadServer = new ServerSocket(uploadPort);
-			print.serverInitializationMessage(Constant.UPLOAD_SERVER.getValue(), InetAddress.getLocalHost().getHostAddress() + FormatCharacter.COL.getValue() + uploadPort);
+			print.serverInitializationMessage(Constant.UPLOAD_SERVER.getValue(), ipAddress + FormatCharacter.COL.getValue() + uploadPort);
 			
 			// Accepting Client Connections
 			while(true) {
