@@ -20,7 +20,7 @@ Following document describes the second project P2P-CI for CSC-573 Internet Prot
         javac -classpath . client\*.java        
         ```
     
-    4. If you are going to run a client on this machine create one directory of your choice and at any location that you want and create few RFC files with `.txt` extension. Keep a note of this directory path, we will need this when we run client program. You should create separate directory for each client the you plan to run.
+    4. If you are going to run a client on this machine create one directory of your choice and at any location that you want and create few RFC files with `.txt` extension. Keep a note of this directory path, we will need this when we run client program. You should create separate directory for each client you plan to run.
 
     5. Running the Server Program
 
