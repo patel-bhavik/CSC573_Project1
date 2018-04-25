@@ -22,6 +22,7 @@ public class CIServer implements Runnable {
 	private Socket clientSocket;
 	private Hashtable<RFC,LinkedList<Peer>> rfcData;
 	private Hashtable<String,String> hostToIpMap;
+	private String clientHostName;
 	
 	CIServer(Socket clientSocket, Hashtable<RFC,LinkedList<Peer>> rfcData, Hashtable<String,String> hostToIpMap){
 		this.clientSocket = clientSocket;
@@ -73,6 +74,8 @@ public class CIServer implements Runnable {
 				}
 			}
 		}
+		
+		hostToIpMap.remove(hostName);
 	}
 	
 	public RFC getSpecificRFC(RFC rfcToSearch) {
@@ -100,7 +103,7 @@ public class CIServer implements Runnable {
 			serverInputStream = new ObjectInputStream (clientSocket.getInputStream());
 			
 			// Add new client to Peer List
-			String clientHostName = (String)serverInputStream.readObject();
+			clientHostName = (String)serverInputStream.readObject();
 			String clientIpAddress = (String)serverInputStream.readObject();
 			hostToIpMap.put(clientHostName, clientIpAddress);
 			
@@ -211,6 +214,7 @@ public class CIServer implements Runnable {
 							  serverOutputStream.writeObject(response);
 							  print.communicationMessage(Constant.RES.getValue(), response, Method.INVALID.name(), Constant.SENT.getValue(), Constant.CLIENT.getValue() + FormatCharacter.COL.getValue() + FormatCharacter.SP.getValue() + clientHostName);
 				}
+				System.out.println("Mapping: " + hostToIpMap);
 			}while(!isCleanup);
 			
 			// Connection Termination Message
@@ -219,6 +223,9 @@ public class CIServer implements Runnable {
 		}catch(Exception exp) {
 			print.errorMessage(Constant.CI_SERVER.getValue(), Constant.COMMUNICATION.getValue(), exp.getMessage());
 		}finally {
+			if(hostToIpMap.containsKey(clientHostName)) {
+				removePeer(clientHostName,clientHostName.split("_")[1]);
+			}
 			cleanUp(serverInputStream,serverOutputStream);
 		}
 	}
