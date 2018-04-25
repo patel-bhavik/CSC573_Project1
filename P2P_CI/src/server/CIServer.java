@@ -214,7 +214,6 @@ public class CIServer implements Runnable {
 							  serverOutputStream.writeObject(response);
 							  print.communicationMessage(Constant.RES.getValue(), response, Method.INVALID.name(), Constant.SENT.getValue(), Constant.CLIENT.getValue() + FormatCharacter.COL.getValue() + FormatCharacter.SP.getValue() + clientHostName);
 				}
-				System.out.println("Mapping: " + hostToIpMap);
 			}while(!isCleanup);
 			
 			// Connection Termination Message
