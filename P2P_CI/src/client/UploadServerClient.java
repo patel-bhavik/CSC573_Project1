@@ -66,7 +66,7 @@ public class UploadServerClient implements Runnable {
 			boolean isCleanup = false;
 			do {
 				String request = (String)uploadServerInputStream.readObject();
-				Response createResposne = new Response();
+				Response createResponse = new Response();
 				method = request.substring(0, request.indexOf(FormatCharacter.TAB.getValue()));
 				HashMap<String,String> resParams=null;
 				String response = null;
@@ -74,7 +74,7 @@ public class UploadServerClient implements Runnable {
 				String statusPhrase = null;
 				switch (method) {
 					case "GET" : print.communicationMessage(Constant.REQ.getValue(), request, Method.GET.name(), Constant.RCVD.getValue(), Constant.CLIENT.getValue() + FormatCharacter.COL.getValue() + FormatCharacter.SP.getValue() + clientHostName);
-								 resParams = createResposne.parseDownloadRequest(request);
+								 resParams = createResponse.parseDownloadRequest(request);
 				 				 statusCode = resParams.get(Constant.STATUS_CODE.getValue());
 				 				 statusPhrase = resParams.get(Constant.STATUS_PHRASE.getValue());
 				 				 if(statusCode.equals(StatusCode.OK.getCode())) {
@@ -93,26 +93,26 @@ public class UploadServerClient implements Runnable {
 												fileContents.append(rf.nextLine() + cr + lf);
 											}
 											rf.close() ;
-											response = createResposne.getDownloadResponse(statusCode, statusPhrase, rfcDirPath, rfcNumber, os, lastModifiedDateTime, contentLength, fileContents);
+											response = createResponse.getDownloadResponse(statusCode, statusPhrase, rfcDirPath, rfcNumber, os, lastModifiedDateTime, contentLength, fileContents);
 										}else {
-											response = createResposne.getDownloadResponseHeader(StatusCode.NOT_FOUND.getCode(), StatusCode.NOT_FOUND.getPhrase(), os);
+											response = createResponse.getDownloadResponseHeader(StatusCode.NOT_FOUND.getCode(), StatusCode.NOT_FOUND.getPhrase(), os);
 										}
 									} catch (FileNotFoundException exp) {
 										print.errorMessage(Constant.UPLOAD_SERVER.getValue(), Constant.FNF.getValue(), exp.getMessage());
-										response = createResposne.getDownloadResponseHeader(StatusCode.NOT_FOUND.getCode(), StatusCode.NOT_FOUND.getPhrase(), os);
+										response = createResponse.getDownloadResponseHeader(StatusCode.NOT_FOUND.getCode(), StatusCode.NOT_FOUND.getPhrase(), os);
 									}				 						
 				 				 }else {
-				 					 response = createResposne.getDownloadResponseHeader(statusCode, statusPhrase, os);
+				 					 response = createResponse.getDownloadResponseHeader(statusCode, statusPhrase, os);
 								 }
 				 				 uploadServerOutputStream.writeObject(response);
 								 print.communicationMessage(Constant.RES.getValue(), response, Method.GET.name(), Constant.SENT.getValue(), Constant.CLIENT.getValue() + FormatCharacter.COL.getValue() + FormatCharacter.SP.getValue() + clientHostName);
 	 							 break;
 					
 					case "EXIT" : print.communicationMessage(Constant.REQ.getValue(), request, Method.EXIT.name(), Constant.RCVD.getValue(), Constant.CLIENT.getValue() + FormatCharacter.COL.getValue() + FormatCharacter.SP.getValue() + clientHostName);
-								  resParams = createResposne.parseExitRequest(request);
+								  resParams = createResponse.parseExitRequest(request);
 								  statusCode = resParams.get(Constant.STATUS_CODE.getValue());
 								  statusPhrase = resParams.get(Constant.STATUS_PHRASE.getValue());
-								  response = createResposne.getResponseHeader(statusCode, statusPhrase);
+								  response = createResponse.getResponseHeader(statusCode, statusPhrase);
 								  if(statusCode.equals(StatusCode.OK.getCode())) {
 									  isCleanup = true;
 								  }
@@ -124,7 +124,7 @@ public class UploadServerClient implements Runnable {
 								  break;
 					
 					default : print.communicationMessage(Constant.REQ.getValue(), request, Method.INVALID.name(), Constant.RCVD.getValue(), Constant.CLIENT.getValue() + FormatCharacter.COL.getValue() + FormatCharacter.SP.getValue() + clientHostName);
-							  response = createResposne.getResponseHeader(StatusCode.BAD_REQUEST.getCode(), StatusCode.BAD_REQUEST.getPhrase());
+							  response = createResponse.getResponseHeader(StatusCode.BAD_REQUEST.getCode(), StatusCode.BAD_REQUEST.getPhrase());
 							  uploadServerOutputStream.writeObject(response);
 							  print.communicationMessage(Constant.RES.getValue(), response, Method.INVALID.name(), Constant.SENT.getValue(), Constant.CLIENT.getValue() + FormatCharacter.COL.getValue() + FormatCharacter.SP.getValue() + clientHostName);
 				}
